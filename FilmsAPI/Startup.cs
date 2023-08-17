@@ -1,3 +1,4 @@
+using AutoMapper;
 using FilmsAPI.Core;
 using FilmsAPI.Core.Helpers;
 using FilmsAPI.Core.Services;
@@ -19,19 +20,32 @@ namespace FilmsAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Automapper configuration
             services.AddAutoMapper(typeof(Startup));
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperProfiles());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddControllers();
+            _loadServices(services);
+            _loadRepositories(services);
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(c =>
+            _configSwagger(services);
+
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmsAPI", Version = "v1" });
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("").AllowAnyMethod().AllowAnyHeader();
+                });
             });
-            services.AddScoped<IGenreServices, GenreServicesImpl>();
-            services.AddScoped<IGenreRepository, GenreRepositoryImpl>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,6 +63,26 @@ namespace FilmsAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void _loadServices(IServiceCollection services)
+        {
+            services.AddScoped<IGenreServices, GenreServicesImpl>();
+            services.AddScoped<IActorServices, ActorServicesImpl>();
+        }
+
+        private void _loadRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IGenreRepository, GenreRepositoryImpl>();
+            services.AddScoped<IActorRepository, ActorRepositoryImpl>();
+        }
+
+        private void _configSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmsAPI", Version = "v1" });
             });
         }
     }
