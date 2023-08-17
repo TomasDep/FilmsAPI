@@ -10,7 +10,11 @@ namespace FilmsAPI.Core.Helpers
         {
             CreateMap<Genre, GenreDto>().ReverseMap();
             CreateMap<AddGenreDto, Genre>();
-            CreateMap<Genre, AddGenreDto>();
+            CreateMap<UpdateGenreDto, Genre>();
+
+            CreateMap<Actor, ActorDto>().ReverseMap();
+            CreateMap<AddActorDto, Actor>();
+            CreateMap<UpdateActorDto, Actor>();
         }
     }
 }
