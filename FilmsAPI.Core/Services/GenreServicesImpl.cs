@@ -60,9 +60,8 @@ namespace FilmsAPI.Core.Services
         {
             try
             {
-                // TODO: Arreglar Mapeo
                 var newGenre = _mapper.Map<Genre>(addGenreDto);
-                _genreRepository.CreateGenre(newGenre);
+                await _genreRepository.CreateGenre(newGenre);
                 var newGenreDto = _mapper.Map<GenreDto>(newGenre);
                 return new ObjectResult(newGenreDto) { StatusCode = 201 };
             }
@@ -82,7 +81,7 @@ namespace FilmsAPI.Core.Services
                     return new NotFoundObjectResult($"Genre by Id: {id} not exist");
                 var genre = _mapper.Map<Genre>(updateGenreDto);
                 genre.Id = id;
-                _genreRepository.UpdateGenre(genre);
+                await _genreRepository.UpdateGenre(genre);
                 return new NoContentResult();
             }
             catch (Exception ex)

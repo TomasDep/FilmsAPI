@@ -22,16 +22,18 @@ namespace FilmsAPI.Dao.Repositories
             return await _context.Genres.FirstOrDefaultAsync(genre => genre.Id == id);
         }
 
-        public async void CreateGenre(Genre genre)
+        public async Task<bool> CreateGenre(Genre genre)
         {
             _context.Add(genre);
             await _context.SaveChangesAsync();
+            return true;
         }
 
-        public async void UpdateGenre(Genre genre)
+        public async Task<bool> UpdateGenre(Genre genre)
         {
             _context.Entry(genre).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> IsGenreById(long id)
@@ -39,10 +41,11 @@ namespace FilmsAPI.Dao.Repositories
             return await _context.Genres.AnyAsync(genre => genre.Id == id);
         }
 
-        public async void RemoveGenre(long id)
+        public async Task<bool> RemoveGenre(long id)
         {
             _context.Remove(new Genre { Id = id });
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
