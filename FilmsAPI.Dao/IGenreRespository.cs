@@ -6,9 +6,9 @@ namespace FilmsAPI.Dao
     {
         Task<List<Genre>> CollectionsGenres();
         Task<Genre> GenreById(long id);
-        void CreateGenre(Genre genre);
-        void UpdateGenre(Genre genre);
+        Task<bool> CreateGenre(Genre genre);
+        Task<bool> UpdateGenre(Genre genre);
         Task<bool> IsGenreById(long id);
-        void RemoveGenre(long id);
+        Task<bool> RemoveGenre(long id);
     }
 }
