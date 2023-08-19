@@ -1,4 +1,5 @@
 using FilmsAPI.Dao.Entities;
+using FilmsAPI.Dto;
 
 namespace FilmsAPI.Dao
 {
@@ -9,6 +10,6 @@ namespace FilmsAPI.Dao
         Task<bool> CreateActor(Actor actor);
         Task<bool> UpdateActor(Actor actor);
         Task<bool> IsActorById(long id);
-        Task<bool> RemoveActorById(long id);
+        Task<bool> RemoveActor(Actor actor);
     }
 }

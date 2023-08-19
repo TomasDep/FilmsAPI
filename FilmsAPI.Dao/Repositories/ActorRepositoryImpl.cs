@@ -42,9 +42,9 @@ namespace FilmsAPI.Dao.Repositories
             return await _context.Actors.AnyAsync(actor => actor.Id == id);
         }
 
-        public async Task<bool> RemoveActorById(long id)
+        public async Task<bool> RemoveActor(Actor actor)
         {
-            _context.Remove(new Actor() { Id = id });
+            _context.Remove(actor);
             await _context.SaveChangesAsync();
             return true;
         }
