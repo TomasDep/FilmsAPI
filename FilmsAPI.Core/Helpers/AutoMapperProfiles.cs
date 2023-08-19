@@ -17,6 +17,13 @@ namespace FilmsAPI.Core.Helpers
             CreateMap<AddActorDto, Actor>();
             CreateMap<UpdateActorDto, Actor>()
                 .ForMember(member => member.Photo, options => options.Ignore());
+            CreateMap<ActorPatchDto, Actor>().ReverseMap();
+
+            CreateMap<Movie, MovieDto>().ReverseMap();
+            CreateMap<AddMovieDto, Movie>();
+            CreateMap<UpdateMovieDto, Movie>()
+                .ForMember(member => member.Poster, options => options.Ignore());
+            CreateMap<MoviePatchDto, Movie>().ReverseMap();
         }
     }
 }
