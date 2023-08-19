@@ -21,7 +21,8 @@ namespace FilmsAPI.Core.Services
             ILogger<StorageFileImpl> logger
         )
         {
-            _connectionString = configuration.GetConnectionString("AzureStorage");
+            _connectionString = string.IsNullOrEmpty(configuration.GetConnectionString("AzureStorage")) ?
+                configuration.GetConnectionString("AzureStorage") : "";
             _env = env;
             _httpContext = httpContext;
             _logger = logger;
@@ -31,6 +32,13 @@ namespace FilmsAPI.Core.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(_connectionString))
+                {
+                    _logger.LogInformation("The connection string is null !!!, however it will try to remove a file that is in the local repository");
+                    await _removeFileLocal(route, container);
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(route))
                 {
                     return;
@@ -51,6 +59,12 @@ namespace FilmsAPI.Core.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(_connectionString))
+                {
+                    _logger.LogInformation("The connection string is null !!!, therefore the image will not be uploaded to Azure Storage, but to a local repository");
+                    return await _saveFileLocal(content, extension, container, contentType);
+                }
+
                 var client = new BlobContainerClient(_connectionString, container);
                 await client.CreateIfNotExistsAsync();
                 client.SetAccessPolicy(PublicAccessType.Blob);
@@ -76,12 +90,15 @@ namespace FilmsAPI.Core.Services
             return await SaveFile(content, extension, container, contentType);
         }
 
-        public Task RemoveFileLocal(string route, string container)
+        private Task _removeFileLocal(string route, string container)
         {
+            _logger.LogInformation(route, container);
             if (route != null)
             {
                 var filename = Path.GetFileName(route);
+                _logger.LogInformation(filename);
                 string fileDirectory = Path.Combine(_env.WebRootPath, container, filename);
+                _logger.LogInformation(fileDirectory);
                 if (File.Exists(fileDirectory))
                 {
                     File.Delete(fileDirectory);
@@ -90,25 +107,26 @@ namespace FilmsAPI.Core.Services
             return Task.FromResult(0);
         }
 
-        public async Task<string> SaveFileLocal(byte[] content, string extension, string container, string contentType)
+        private async Task<string> _saveFileLocal(byte[] content, string extension, string container, string contentType)
         {
+            _logger.LogInformation($"Extension del archivo: {extension}");
             var filename = $"{Guid.NewGuid()}{extension}";
+            _logger.LogInformation($"Nombre del Archivo: {filename}");
+            _logger.LogInformation($"_env.WebRootPath: {_env.WebRootPath}");
             string folder = Path.Combine(_env.WebRootPath, container);
+            _logger.LogInformation($"Folder: {folder}");
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
             string route = Path.Combine(folder, filename);
+            _logger.LogInformation($"Route: {route}");
             await File.WriteAllBytesAsync(route, content);
             var currentUrl = $"{_httpContext.HttpContext.Request.Scheme}://{_httpContext.HttpContext.Request.Host}";
+            _logger.LogInformation($"CurrentUrl: {currentUrl}");
             var urlBD = Path.Combine(currentUrl, container, filename).Replace("\\", "/");
+            _logger.LogInformation($"URlBD: {urlBD}");
             return urlBD;
-        }
-
-        public async Task<string> UpdateFileLocal(byte[] content, string extension, string container, string route, string contentType)
-        {
-            await RemoveFile(route, container);
-            return await SaveFile(content, extension, container, contentType);
         }
     }
 }
