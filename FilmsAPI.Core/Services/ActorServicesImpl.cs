@@ -10,16 +10,20 @@ namespace FilmsAPI.Core.Services
     public class ActorServicesImpl : IActorServices
     {
         private readonly IActorRepository _actorRepository;
+        private readonly IStorageFiles _storageFiles;
         private readonly IMapper _mapper;
         private readonly ILogger<ActorServicesImpl> _logger;
+        private readonly string _container = "actorsContainer";
 
         public ActorServicesImpl(
             IActorRepository actorRepository,
+            IStorageFiles storageFiles,
             IMapper mapper,
             ILogger<ActorServicesImpl> logger
         )
         {
             _actorRepository = actorRepository;
+            _storageFiles = storageFiles;
             _mapper = mapper;
             _logger = logger;
         }
@@ -61,6 +65,16 @@ namespace FilmsAPI.Core.Services
             try
             {
                 var actor = _mapper.Map<Actor>(addActorDto);
+                if (addActorDto.Photo != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await addActorDto.Photo.CopyToAsync(memoryStream);
+                        var content = memoryStream.ToArray();
+                        var extension = Path.GetExtension(addActorDto.Photo.FileName);
+                        actor.Photo = await _storageFiles.SaveFile(content, extension, _container, addActorDto.Photo.ContentType);
+                    }
+                }
                 await _actorRepository.CreateActor(actor);
                 var actorDto = _mapper.Map<ActorDto>(actor);
                 return new OkObjectResult(actorDto);
@@ -76,10 +90,27 @@ namespace FilmsAPI.Core.Services
         {
             try
             {
-                var actor = _mapper.Map<Actor>(updateActorDto);
+                var actor = await _actorRepository.GetActorById(id);
+                if (actor == null)
+                    return new NotFoundObjectResult($"Actor by id: {id} not exists.");
                 actor.Id = id;
+                if (updateActorDto.Photo != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await updateActorDto.Photo.CopyToAsync(memoryStream);
+                        var content = memoryStream.ToArray();
+                        var extension = Path.GetExtension(updateActorDto.Photo.FileName);
+                        actor.Photo = await _storageFiles.UpdateFile(
+                            content,
+                            extension,
+                            _container,
+                            actor.Photo,
+                            updateActorDto.Photo.ContentType
+                        );
+                    }
+                }
                 await _actorRepository.UpdateActor(actor);
-                var actorDto = _mapper.Map<ActorDto>(actor);
                 return new ObjectResult("") { StatusCode = 204 };
             }
             catch (Exception ex)
