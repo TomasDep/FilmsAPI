@@ -1,5 +1,6 @@
 using FilmsAPI.Core;
 using FilmsAPI.Dto;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmsAPI.Controllers
@@ -19,6 +20,12 @@ namespace FilmsAPI.Controllers
         public Task<ActionResult<List<ActorDto>>> GetCollectionActors()
         {
             return _actorServices.CollectionActors();
+        }
+
+        [HttpGet("paginate")]
+        public Task<ActionResult<List<ActorDto>>> GetCollectionActorsPaginate([FromQuery] PaginationDto paginationDto)
+        {
+            return _actorServices.CollectionActorsPaginate(paginationDto, HttpContext);
         }
 
         [HttpGet("{id:long}")]
@@ -43,6 +50,12 @@ namespace FilmsAPI.Controllers
         public Task<ActionResult> RemoveActor(long id)
         {
             return _actorServices.RemoveActor(id);
+        }
+
+        [HttpPatch("{id:long}")]
+        public Task<ActionResult> PatchActor(long id, [FromBody] JsonPatchDocument<ActorPatchDto> patchDocument)
+        {
+            return _actorServices.PatchActor(id, patchDocument, ModelState);
         }
     }
 }
