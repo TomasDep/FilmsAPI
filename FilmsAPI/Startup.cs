@@ -34,7 +34,7 @@ namespace FilmsAPI
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddHttpContextAccessor();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IStorageFiles, StorageFileImpl>();
             _loadServices(services);
             _loadRepositories(services);
@@ -73,12 +73,14 @@ namespace FilmsAPI
         {
             services.AddScoped<IGenreServices, GenreServicesImpl>();
             services.AddScoped<IActorServices, ActorServicesImpl>();
+            services.AddScoped<IMovieServices, MovieServicesImpl>();
         }
 
         private void _loadRepositories(IServiceCollection services)
         {
             services.AddScoped<IGenreRepository, GenreRepositoryImpl>();
             services.AddScoped<IActorRepository, ActorRepositoryImpl>();
+            services.AddScoped<IMovieRepository, MovieRepositoryImpl>();
         }
 
         private void _configSwagger(IServiceCollection services)
