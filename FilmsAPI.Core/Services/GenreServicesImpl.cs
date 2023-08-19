@@ -98,7 +98,7 @@ namespace FilmsAPI.Core.Services
                 var isGenre = await _genreRepository.IsGenreById(id);
                 if (!isGenre)
                     return new NotFoundObjectResult($"Genre by Id: {id} not exist");
-                _genreRepository.RemoveGenre(id);
+                await _genreRepository.RemoveGenre(id);
                 return new NoContentResult();
             }
             catch (Exception ex)
