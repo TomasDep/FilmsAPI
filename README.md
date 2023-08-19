@@ -8,6 +8,7 @@ Movie application created in ASP.Net Core 6
 -   Entity Framework Core
 -   PostgreSQL
 -   Swagger
+-   Azure Storage
 
 ## Commands
 

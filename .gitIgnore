@@ -10,6 +10,9 @@ bin/
 *.sln
 .vscode
 
+wwwroot/*
+
+
 # User-specific files
 *.suo
 *.user
