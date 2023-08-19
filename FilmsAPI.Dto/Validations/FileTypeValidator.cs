@@ -17,7 +17,7 @@ namespace FilmsAPI.Dto.Validations
         {
             if (fileTypes == FileTypes.Image)
             {
-                _validTypes = new string[] { "image/jpeg", "image/png", "image/gif" };
+                _validTypes = new string[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
             }
         }
 
