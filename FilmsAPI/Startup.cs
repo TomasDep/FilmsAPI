@@ -33,7 +33,9 @@ namespace FilmsAPI
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddHttpContextAccessor();
             services.AddControllers();
+            services.AddTransient<IStorageFiles, StorageFileImpl>();
             _loadServices(services);
             _loadRepositories(services);
             services.AddEndpointsApiExplorer();
@@ -58,6 +60,7 @@ namespace FilmsAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
