@@ -69,6 +69,7 @@ namespace FilmsAPI.Core.Services
                         movie.Poster = await _storageFiles.SaveFile(content, extension, _container, addMovieDto.Poster.ContentType);
                     }
                 }
+                AssignOrderActors(movie);
                 await _movieRepository.CreateMovie(movie);
                 var movieDto = _mapper.Map<MovieDto>(movie);
                 return new ObjectResult(movieDto) { StatusCode = 201 };
@@ -168,6 +169,7 @@ namespace FilmsAPI.Core.Services
                         );
                     }
                 }
+                AssignOrderActors(movie);
                 await _movieRepository.UpdateMovie(movie);
                 return new ObjectResult("") { StatusCode = 204 };
             }
@@ -176,6 +178,13 @@ namespace FilmsAPI.Core.Services
                 _logger.LogInformation($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
+        }
+
+        private void AssignOrderActors(Movie movie)
+        {
+            if (movie.MoviesActors != null)
+                for (int i = 0; i < movie.MoviesActors.Count; i++)
+                    movie.MoviesActors[i].Orden = i;
         }
     }
 }
