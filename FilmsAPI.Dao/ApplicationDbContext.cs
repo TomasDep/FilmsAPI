@@ -9,8 +9,140 @@ namespace FilmsAPI.Dao
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MoviesActors>()
+                .HasKey(x => new { x.ActorId, x.MovieId });
+
+            modelBuilder.Entity<MoviesGenres>()
+                .HasKey(x => new { x.GenreId, x.MovieId });
+
+            JunkData(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<MoviesActors> MoviesActors { get; set; }
+        public DbSet<MoviesGenres> MoviesGenres { get; set; }
+
+        private void JunkData(ModelBuilder modelBuilder)
+        {
+            var adventure = new Genre() { Id = 4, Name = "Adventure" };
+            var animation = new Genre() { Id = 5, Name = "Animation" };
+            var suspense = new Genre() { Id = 6, Name = "Suspense" };
+            var romance = new Genre() { Id = 7, Name = "Romance" };
+
+            modelBuilder.Entity<Genre>()
+                .HasData(new List<Genre>
+                {
+                    adventure, animation, suspense, romance
+                });
+
+            var jimCarreyBirthdate = new DateTime(1962, 01, 17, 0, 0, 0, DateTimeKind.Unspecified);
+            var robertDowneyBirthdate = new DateTime(1965, 4, 4, 0, 0, 0, DateTimeKind.Unspecified);
+            var chrisEvansBirthdate = new DateTime(1981, 06, 13, 0, 0, 0, DateTimeKind.Unspecified);
+
+            var utcJimCarreyBirthdate = TimeZoneInfo.ConvertTimeToUtc(jimCarreyBirthdate, TimeZoneInfo.Utc);
+            var utcRobertDowneyBirthdate = TimeZoneInfo.ConvertTimeToUtc(robertDowneyBirthdate, TimeZoneInfo.Utc);
+            var utcChrisEvansBirthdate = TimeZoneInfo.ConvertTimeToUtc(chrisEvansBirthdate, TimeZoneInfo.Utc);
+
+            var jimCarrey = new Actor() { Id = 5, Name = "Jim Carrey", Birthdate = utcJimCarreyBirthdate };
+            var robertDowney = new Actor() { Id = 6, Name = "Robert Downey Jr.", Birthdate = utcRobertDowneyBirthdate };
+            var chrisEvans = new Actor() { Id = 7, Name = "Chris Evans", Birthdate = utcChrisEvansBirthdate };
+
+            modelBuilder.Entity<Actor>()
+                .HasData(new List<Actor>
+                {
+                    jimCarrey, robertDowney, chrisEvans
+                });
+
+            var endgameReleaseDate = new DateTime(2019, 04, 26, 0, 0, 0, DateTimeKind.Unspecified);
+            var utcEndgameReleaseDate = TimeZoneInfo.ConvertTimeToUtc(endgameReleaseDate, TimeZoneInfo.Utc);
+
+            var endgame = new Movie()
+            {
+                Id = 2,
+                Title = "Avengers: Endgame",
+                IsCinema = true,
+                ReleaseDate = utcEndgameReleaseDate
+            };
+
+            var iwReleaseDate = new DateTime(2019, 04, 26, 0, 0, 0, DateTimeKind.Unspecified);
+            var utcIwReleaseDate = TimeZoneInfo.ConvertTimeToUtc(iwReleaseDate, TimeZoneInfo.Utc);
+
+            var iw = new Movie()
+            {
+                Id = 3,
+                Title = "Avengers: Infinity Wars",
+                IsCinema = false,
+                ReleaseDate = utcIwReleaseDate
+            };
+
+            var sonicReleaseDate = new DateTime(2020, 02, 28, 0, 0, 0, DateTimeKind.Unspecified);
+            var utcSonicReleaseDate = TimeZoneInfo.ConvertTimeToUtc(sonicReleaseDate, TimeZoneInfo.Utc);
+
+            var sonic = new Movie()
+            {
+                Id = 4,
+                Title = "Sonic the Hedgehog",
+                IsCinema = false,
+                ReleaseDate = utcSonicReleaseDate
+            };
+
+            var emmaReleaseDate = new DateTime(2020, 02, 21, 0, 0, 0, DateTimeKind.Unspecified);
+            var utcEmmaReleaseDate = TimeZoneInfo.ConvertTimeToUtc(emmaReleaseDate, TimeZoneInfo.Utc);
+
+            var emma = new Movie()
+            {
+                Id = 5,
+                Title = "Emma",
+                IsCinema = false,
+                ReleaseDate = utcEmmaReleaseDate
+            };
+
+            var wonderwomanReleaseDate = new DateTime(2020, 08, 14, 0, 0, 0, DateTimeKind.Unspecified);
+            var utcWonderwomanReleaseDate = TimeZoneInfo.ConvertTimeToUtc(wonderwomanReleaseDate, TimeZoneInfo.Utc);
+
+            var wonderwoman = new Movie()
+            {
+                Id = 6,
+                Title = "Wonder Woman 1984",
+                IsCinema = false,
+                ReleaseDate = utcWonderwomanReleaseDate
+            };
+
+            modelBuilder.Entity<Movie>()
+                .HasData(new List<Movie>
+                {
+                    endgame, iw, sonic, emma, wonderwoman
+                });
+
+            modelBuilder.Entity<MoviesGenres>().HasData(
+                new List<MoviesGenres>()
+                {
+                    new MoviesGenres(){MovieId = endgame.Id, GenreId = suspense.Id},
+                    new MoviesGenres(){MovieId = endgame.Id, GenreId = adventure.Id},
+                    new MoviesGenres(){MovieId = iw.Id, GenreId = suspense.Id},
+                    new MoviesGenres(){MovieId = iw.Id, GenreId = adventure.Id},
+                    new MoviesGenres(){MovieId = sonic.Id, GenreId = adventure.Id},
+                    new MoviesGenres(){MovieId = emma.Id, GenreId = suspense.Id},
+                    new MoviesGenres(){MovieId = emma.Id, GenreId = romance.Id},
+                    new MoviesGenres(){MovieId = wonderwoman.Id, GenreId = suspense.Id},
+                    new MoviesGenres(){MovieId = wonderwoman.Id, GenreId = adventure.Id},
+                });
+
+            modelBuilder.Entity<MoviesActors>().HasData(
+                new List<MoviesActors>()
+                {
+                    new MoviesActors(){MovieId = endgame.Id, ActorId = robertDowney.Id, Character = "Tony Stark", Orden = 1},
+                    new MoviesActors(){MovieId = endgame.Id, ActorId = chrisEvans.Id, Character = "Steve Rogers", Orden = 2},
+                    new MoviesActors(){MovieId = iw.Id, ActorId = robertDowney.Id, Character = "Tony Stark", Orden = 1},
+                    new MoviesActors(){MovieId = iw.Id, ActorId = chrisEvans.Id, Character = "Steve Rogers", Orden = 2},
+                    new MoviesActors(){MovieId = sonic.Id, ActorId = jimCarrey.Id, Character = "Dr. Ivo Robotnik", Orden = 1}
+                });
+        }
     }
 }
