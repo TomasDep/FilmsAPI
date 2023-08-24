@@ -1,14 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using FilmsAPI.Dto.Constants;
+using FilmsAPI.Dto.Helpers;
 using FilmsAPI.Dto.Validations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FilmsAPI.Dto
 {
-    public class UpdateMovieDto : MoviePatchDto
+    public class UpdateMovieDto : AddMovieDto
     {
-        [FileSizeValidator(5)]
-        [FileTypeValidator(FileTypes.Image)]
-        public IFormFile Poster { get; set; }
     }
 }

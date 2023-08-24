@@ -5,10 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FilmsAPI.Dto
 {
-    public class UpdateActorDto : ActorPatchDto
+    public class UpdateActorDto : AddActorDto
     {
-        [FileSizeValidator(5)]
-        [FileTypeValidator(FileTypes.Image)]
-        public IFormFile Photo { get; set; }
     }
 }

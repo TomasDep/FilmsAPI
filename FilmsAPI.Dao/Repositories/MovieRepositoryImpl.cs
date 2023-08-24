@@ -31,7 +31,10 @@ namespace FilmsAPI.Dao.Repositories
 
         public async Task<Movie> MovieById(long id)
         {
-            return await _context.Movies.FirstOrDefaultAsync(movie => movie.Id == id);
+            return await _context.Movies
+                .Include(movie => movie.MoviesActors)
+                .Include(movie => movie.MoviesGenres)
+                .FirstOrDefaultAsync(movie => movie.Id == id);
         }
 
         public async Task<bool> RemoveMovie(Movie movie)
