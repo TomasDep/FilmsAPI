@@ -22,8 +22,20 @@ namespace FilmsAPI.Controllers
             return _movieService.CollectionMovies();
         }
 
+        [HttpGet("upcoming-releases")]
+        public Task<ActionResult<List<MoviesIndexDto>>> UpcomingReleasesMovies()
+        {
+            return _movieService.UpcomingReleasesMovies();
+        }
+
+        [HttpGet("filter")]
+        public Task<ActionResult<List<MovieDto>>> AllMoviesWithFilter([FromQuery] MovieFilterDto movieFilterDto)
+        {
+            return _movieService.AllMoviesWithFilter(movieFilterDto, HttpContext);
+        }
+
         [HttpGet("{id:long}")]
-        public Task<ActionResult<MovieDto>> GetMovieById(long id)
+        public Task<ActionResult<MovieDetailsDto>> GetMovieById(long id)
         {
             return _movieService.GetMovieById(id);
         }

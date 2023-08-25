@@ -24,6 +24,21 @@ namespace FilmsAPI.Dao.Repositories
             return true;
         }
 
+        public async Task<List<Movie>> GetMoviesInCinemas(int movies)
+        {
+            return await _context.Movies.Where(movie => movie.IsCinema)
+                .Take(movies)
+                .ToListAsync();
+        }
+
+        public async Task<List<Movie>> GetNextReleases(int movies, DateTime date)
+        {
+            return await _context.Movies.Where(movie => movie.ReleaseDate > date)
+                .OrderBy(orderBy => orderBy.ReleaseDate)
+                .Take(movies)
+                .ToListAsync();
+        }
+
         public async Task<bool> IsMovieById(long id)
         {
             return await _context.Movies.AnyAsync(movie => movie.Id == id);
@@ -32,8 +47,8 @@ namespace FilmsAPI.Dao.Repositories
         public async Task<Movie> MovieById(long id)
         {
             return await _context.Movies
-                .Include(movie => movie.MoviesActors)
-                .Include(movie => movie.MoviesGenres)
+                .Include(movie => movie.MoviesActors).ThenInclude(x => x.Actor)
+                .Include(movie => movie.MoviesGenres).ThenInclude(x => x.Genre)
                 .FirstOrDefaultAsync(movie => movie.Id == id);
         }
 

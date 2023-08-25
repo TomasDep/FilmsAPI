@@ -10,5 +10,7 @@ namespace FilmsAPI.Dao
         Task<bool> UpdateMovie(Movie movie);
         Task<bool> IsMovieById(long id);
         Task<bool> RemoveMovie(Movie movie);
+        Task<List<Movie>> GetNextReleases(int movies, DateTime date);
+        Task<List<Movie>> GetMoviesInCinemas(int movies);
     }
 }

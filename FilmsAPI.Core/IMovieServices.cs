@@ -10,7 +10,9 @@ namespace FilmsAPI.Core
     {
         Task<ActionResult<List<MovieDto>>> CollectionMovies();
         Task<ActionResult<List<MovieDto>>> CollectionMoviesPaginate(PaginationDto paginationDto, HttpContext httpContext);
-        Task<ActionResult<MovieDto>> GetMovieById(long id);
+        Task<ActionResult<List<MoviesIndexDto>>> UpcomingReleasesMovies();
+        Task<ActionResult<List<MovieDto>>> AllMoviesWithFilter(MovieFilterDto movieFilterDto, HttpContext httpContext);
+        Task<ActionResult<MovieDetailsDto>> GetMovieById(long id);
         Task<ActionResult> CreateMovie(AddMovieDto addMovieDto);
         Task<ActionResult> UpdateMovie(long id, UpdateMovieDto updateMovieDto);
         Task<ActionResult> PatchMovie(long id, JsonPatchDocument<MoviePatchDto> patchDocument, ModelStateDictionary modelState);
