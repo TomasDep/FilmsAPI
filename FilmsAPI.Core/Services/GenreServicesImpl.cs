@@ -34,7 +34,7 @@ namespace FilmsAPI.Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                _logger.LogError($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
         }
@@ -51,7 +51,7 @@ namespace FilmsAPI.Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                _logger.LogError($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
         }
@@ -67,7 +67,7 @@ namespace FilmsAPI.Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                _logger.LogError($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
         }
@@ -86,7 +86,7 @@ namespace FilmsAPI.Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                _logger.LogError($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
         }
@@ -103,7 +103,7 @@ namespace FilmsAPI.Core.Services
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"{ex}");
+                _logger.LogError($"{ex}");
                 return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
             }
         }
