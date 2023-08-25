@@ -28,6 +28,34 @@ namespace FilmsAPI.Core.Helpers
                 .ForMember(member => member.MoviesGenres, options => options.MapFrom(MapUpdateMoviesGenres))
                 .ForMember(member => member.MoviesActors, options => options.MapFrom(MapUpdateMoviesActors));
             CreateMap<MoviePatchDto, Movie>().ReverseMap();
+            CreateMap<Movie, MovieDetailsDto>()
+                .ForMember(member => member.Genres, options => options.MapFrom(MapMoviesGenres))
+                .ForMember(member => member.Actors, options => options.MapFrom(MapMoviesActors));
+        }
+
+        private List<ActorMovieDetailDto> MapMoviesActors(Movie movie, MovieDetailsDto movieDetailsDto)
+        {
+            var result = new List<ActorMovieDetailDto>();
+            if (movie.MoviesActors == null)
+                return result;
+            foreach (var actorMovie in movie.MoviesActors)
+                result.Add(new ActorMovieDetailDto()
+                {
+                    ActorId = actorMovie.ActorId,
+                    Character = actorMovie.Character,
+                    NamePerson = actorMovie.Actor.Name
+                });
+            return result;
+        }
+
+        private List<GenreDto> MapMoviesGenres(Movie movie, MovieDetailsDto movieDetailsDto)
+        {
+            var result = new List<GenreDto>();
+            if (movie.MoviesGenres == null)
+                return result;
+            foreach (var genreMovie in movie.MoviesGenres)
+                result.Add(new GenreDto() { Id = genreMovie.GenreId, Name = genreMovie.Genre.Name });
+            return result;
         }
 
         private List<MoviesGenres> MapAddMoviesGenres(AddMovieDto addMovieDto, Movie movie)
