@@ -74,6 +74,7 @@ namespace FilmsAPI
             services.AddScoped<IGenreServices, GenreServicesImpl>();
             services.AddScoped<IActorServices, ActorServicesImpl>();
             services.AddScoped<IMovieServices, MovieServicesImpl>();
+            services.AddScoped<ICinemaServices, CinemaServicesImpl>();
         }
 
         private void _loadRepositories(IServiceCollection services)
@@ -81,6 +82,7 @@ namespace FilmsAPI
             services.AddScoped<IGenreRepository, GenreRepositoryImpl>();
             services.AddScoped<IActorRepository, ActorRepositoryImpl>();
             services.AddScoped<IMovieRepository, MovieRepositoryImpl>();
+            services.AddScoped<ICinemaRepository, CinemaRepositoryImpl>();
         }
 
         private void _configSwagger(IServiceCollection services)
