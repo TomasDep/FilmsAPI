@@ -7,6 +7,7 @@ namespace FilmsAPI.Dao
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -17,6 +18,9 @@ namespace FilmsAPI.Dao
             modelBuilder.Entity<MoviesGenres>()
                 .HasKey(x => new { x.GenreId, x.MovieId });
 
+            modelBuilder.Entity<MoviesCinema>()
+                .HasKey(x => new { x.MovieId, x.CinemaId });
+
             JunkData(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
@@ -25,8 +29,10 @@ namespace FilmsAPI.Dao
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Cinema> Cinema { get; set; }
         public DbSet<MoviesActors> MoviesActors { get; set; }
         public DbSet<MoviesGenres> MoviesGenres { get; set; }
+        public DbSet<MoviesCinema> MoviesCinema { get; set; }
 
         private void JunkData(ModelBuilder modelBuilder)
         {
