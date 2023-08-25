@@ -3,6 +3,7 @@ using System;
 using FilmsAPI.Dao;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FilmsAPI.Dao.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230825203628_RefacorSeedData")]
+    partial class RefacorSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,19 +51,19 @@ namespace FilmsAPI.Dao.Migrations
                         new
                         {
                             Id = 5L,
-                            Birthdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Birthdate = new DateTime(1962, 1, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Jim Carrey"
                         },
                         new
                         {
                             Id = 6L,
-                            Birthdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Birthdate = new DateTime(1965, 4, 4, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Robert Downey Jr."
                         },
                         new
                         {
                             Id = 7L,
-                            Birthdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Birthdate = new DateTime(1981, 6, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Chris Evans"
                         });
                 });
@@ -137,35 +139,35 @@ namespace FilmsAPI.Dao.Migrations
                         {
                             Id = 2L,
                             IsCinema = true,
-                            ReleaseDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReleaseDate = new DateTime(2019, 4, 26, 0, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Avengers: Endgame"
                         },
                         new
                         {
                             Id = 3L,
                             IsCinema = false,
-                            ReleaseDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReleaseDate = new DateTime(2019, 4, 26, 0, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Avengers: Infinity Wars"
                         },
                         new
                         {
                             Id = 4L,
                             IsCinema = false,
-                            ReleaseDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReleaseDate = new DateTime(2020, 2, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Sonic the Hedgehog"
                         },
                         new
                         {
                             Id = 5L,
                             IsCinema = false,
-                            ReleaseDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReleaseDate = new DateTime(2020, 2, 21, 0, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Emma"
                         },
                         new
                         {
                             Id = 6L,
                             IsCinema = false,
-                            ReleaseDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReleaseDate = new DateTime(2020, 8, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Wonder Woman 1984"
                         });
                 });
