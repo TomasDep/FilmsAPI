@@ -1,10 +1,14 @@
+using System.Text;
 using AutoMapper;
 using FilmsAPI.Core;
 using FilmsAPI.Core.Helpers;
 using FilmsAPI.Core.Services;
 using FilmsAPI.Dao;
 using FilmsAPI.Dao.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
@@ -62,6 +66,7 @@ namespace FilmsAPI
                     builder.WithOrigins("").AllowAnyMethod().AllowAnyHeader();
                 });
             });
+            _authConfig(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -81,6 +86,27 @@ namespace FilmsAPI
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void _authConfig(IServiceCollection services)
+        {
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["jwt:key"])
+                        ),
+                        ClockSkew = TimeSpan.Zero
+                    }
+                );
         }
 
         private void _loadServices(IServiceCollection services)

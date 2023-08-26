@@ -1,7 +1,6 @@
 using AutoMapper;
 using FilmsAPI.Dao.Entities;
 using FilmsAPI.Dto;
-using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
 namespace FilmsAPI.Core.Helpers
