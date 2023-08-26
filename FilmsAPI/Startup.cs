@@ -6,6 +6,8 @@ using FilmsAPI.Dao;
 using FilmsAPI.Dao.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace FilmsAPI
 {
@@ -20,19 +22,31 @@ namespace FilmsAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Automapper configuration
-            services.AddAutoMapper(typeof(Startup));
-            var mapperConfig = new MapperConfiguration(mc =>
+            // ----- Automapper configuration -----
+            // Configure AutoMapper with profiles
+            services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+            // Configure Geometry Factory
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
+            // Configure AutoMapper with GeometryFactory
+            services.AddSingleton(provider =>
             {
-                mc.AddProfile(new AutoMapperProfiles());
+                var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                return new MapperConfiguration(config =>
+                {
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper();
             });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    o => o.UseNetTopologySuite()
+                );
             });
+
             services.AddHttpContextAccessor();
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IStorageFiles, StorageFileImpl>();
