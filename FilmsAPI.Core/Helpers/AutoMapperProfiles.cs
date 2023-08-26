@@ -1,12 +1,14 @@
 using AutoMapper;
 using FilmsAPI.Dao.Entities;
 using FilmsAPI.Dto;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace FilmsAPI.Core.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
-        public AutoMapperProfiles()
+        public AutoMapperProfiles(GeometryFactory geometryFactory)
         {
             CreateMap<Genre, GenreDto>().ReverseMap();
             CreateMap<AddGenreDto, Genre>();
@@ -31,6 +33,19 @@ namespace FilmsAPI.Core.Helpers
             CreateMap<Movie, MovieDetailsDto>()
                 .ForMember(member => member.Genres, options => options.MapFrom(MapMoviesGenres))
                 .ForMember(member => member.Actors, options => options.MapFrom(MapMoviesActors));
+
+            CreateMap<CinemaDto, Cinema>()
+                .ForMember(member => member.Location, x => x.MapFrom(y =>
+                    geometryFactory.CreatePoint(new Coordinate(y.Longitude, y.Latitude))));
+            CreateMap<AddCinemaDto, Cinema>()
+                .ForMember(member => member.Location, x => x.MapFrom(y =>
+                    geometryFactory.CreatePoint(new Coordinate(y.Longitude, y.Latitude)))); ;
+            CreateMap<UpdateCinemaDto, Cinema>()
+                .ForMember(member => member.Location, x => x.MapFrom(y =>
+                    geometryFactory.CreatePoint(new Coordinate(y.Longitude, y.Latitude)))); ;
+            CreateMap<Cinema, CinemaDto>()
+                .ForMember(member => member.Latitude, x => x.MapFrom(y => y.Location.Y))
+                .ForMember(member => member.Longitude, x => x.MapFrom(y => y.Location.X));
         }
 
         private List<ActorMovieDetailDto> MapMoviesActors(Movie movie, MovieDetailsDto movieDetailsDto)
