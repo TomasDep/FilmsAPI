@@ -1,5 +1,7 @@
 ﻿using FilmsAPI.Dao.Entities;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace FilmsAPI.Dao
 {
@@ -36,6 +38,17 @@ namespace FilmsAPI.Dao
 
         private void JunkData(ModelBuilder modelBuilder)
         {
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 43226);
+
+            modelBuilder.Entity<Cinema>()
+                .HasData(new List<Cinema>
+                {
+                    new Cinema { Id = 1, Name = "Cine Normandie", Location = geometryFactory.CreatePoint(new Coordinate(-70.65187693992922, -33.44659291059971)) },
+                    new Cinema { Id = 2, Name = "Cinépolis Estación Central", Location = geometryFactory.CreatePoint(new Coordinate(-70.67814409727907, -33.45148636229063)) },
+                    new Cinema { Id = 3, Name = "Cineplanet", Location = geometryFactory.CreatePoint(new Coordinate(-70.60807915444221, -33.507899456976844)) },
+                    new Cinema { Id = 4, Name = "Grauman's Chinese Theatre", Location = geometryFactory.CreatePoint(new Coordinate(-118.3409283084818, 34.10226286913486)) },
+                });
+
             var adventure = new Genre() { Id = 4, Name = "Adventure" };
             var animation = new Genre() { Id = 5, Name = "Animation" };
             var suspense = new Genre() { Id = 6, Name = "Suspense" };
