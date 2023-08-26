@@ -4,22 +4,26 @@ using FilmsAPI.Dao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FilmsAPI.Dao.Entities;
+using NetTopologySuite.Geometries;
 
 namespace FilmsAPI.Core.Services
 {
     public class CinemaServicesImpl : ICinemaServices
     {
         private readonly ICinemaRepository _cinemaRepository;
+        private readonly GeometryFactory _geometryFactory;
         private readonly IMapper _mapper;
         private readonly ILogger<CinemaServicesImpl> _logger;
 
         public CinemaServicesImpl(
             ICinemaRepository cinemaRepository,
+            GeometryFactory geometryFactory,
             IMapper mapper,
             ILogger<CinemaServicesImpl> logger
         )
         {
             _cinemaRepository = cinemaRepository;
+            _geometryFactory = geometryFactory;
             _mapper = mapper;
             _logger = logger;
         }
@@ -48,6 +52,23 @@ namespace FilmsAPI.Core.Services
                 var cinemas = await _cinemaRepository.CollectionCinemas();
                 var cinemasDto = _mapper.Map<List<CinemaDto>>(cinemas);
                 return new OkObjectResult(cinemasDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex}");
+                return new ObjectResult($"Internal Core Exception: {ex.Message}") { StatusCode = 500 };
+            }
+        }
+
+        public async Task<ActionResult<List<CinemaCloseDto>>> CollectionCloseCinema(CinemaCinemaFilterDto cinemaCinemaFilterDto)
+        {
+            try
+            {
+                var userLocation = _geometryFactory.CreatePoint(
+                    new Coordinate(cinemaCinemaFilterDto.Longitude, cinemaCinemaFilterDto.Latitude)
+                );
+                var cinemas = await _cinemaRepository.GetCinemasClosed(userLocation, cinemaCinemaFilterDto);
+                return new OkObjectResult(cinemas);
             }
             catch (Exception ex)
             {

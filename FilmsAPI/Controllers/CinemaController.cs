@@ -27,6 +27,12 @@ namespace FilmsAPI.Controllers
             return _cinemaServices.CinemaById(id);
         }
 
+        [HttpGet("{closed}")]
+        public Task<ActionResult<List<CinemaCloseDto>>> CollectionCloseCinema([FromQuery] CinemaCinemaFilterDto cinemaCinemaFilterDto)
+        {
+            return _cinemaServices.CollectionCloseCinema(cinemaCinemaFilterDto);
+        }
+
         [HttpPost]
         public Task<ActionResult> CreateCinema([FromBody] AddCinemaDto addCinemaDto)
         {

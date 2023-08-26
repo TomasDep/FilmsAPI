@@ -10,5 +10,6 @@ namespace FilmsAPI.Core
         Task<ActionResult> CreateCinema(AddCinemaDto addCinemaDto);
         Task<ActionResult> UpdateCinema(long id, UpdateCinemaDto updateActorDto);
         Task<ActionResult> RemoveCinema(long id);
+        Task<ActionResult<List<CinemaCloseDto>>> CollectionCloseCinema(CinemaCinemaFilterDto cinemaCinemaFilterDto);
     }
 }
