@@ -35,6 +35,7 @@ namespace FilmsAPI.Dao
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Cinema> Cinema { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<MoviesActors> MoviesActors { get; set; }
         public DbSet<MoviesGenres> MoviesGenres { get; set; }
         public DbSet<MoviesCinema> MoviesCinema { get; set; }
