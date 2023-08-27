@@ -111,6 +111,7 @@ namespace FilmsAPI
 
         private void _loadServices(IServiceCollection services)
         {
+            services.AddScoped<ExistMovieAttribute>();
             services.AddScoped<IGenreServices, GenreServicesImpl>();
             services.AddScoped<IActorServices, ActorServicesImpl>();
             services.AddScoped<IMovieServices, MovieServicesImpl>();
