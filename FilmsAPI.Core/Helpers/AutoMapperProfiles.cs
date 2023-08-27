@@ -45,6 +45,12 @@ namespace FilmsAPI.Core.Helpers
             CreateMap<Cinema, CinemaDto>()
                 .ForMember(member => member.Latitude, x => x.MapFrom(y => y.Location.Y))
                 .ForMember(member => member.Longitude, x => x.MapFrom(y => y.Location.X));
+
+            CreateMap<Review, ReviewDto>()
+                .ForMember(member => member.Username, x => x.MapFrom(y => y.User.UserName));
+            CreateMap<ReviewDto, Review>();
+            CreateMap<AddReviewDto, Review>();
+            CreateMap<UpdateActorDto, Review>();
         }
 
         private List<ActorMovieDetailDto> MapMoviesActors(Movie movie, MovieDetailsDto movieDetailsDto)
